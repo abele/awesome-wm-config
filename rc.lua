@@ -166,6 +166,7 @@ do
 
     customization.orig.restart = awesome.restart
     awesome.restart = function ()
+      customization.orig.restart()
         local scr = mouse.screen
         awful.prompt.run({prompt = "Restart (type 'yes' to confirm)? "},
         mypromptbox[scr].widget,
@@ -275,8 +276,8 @@ modkey = "Mod4"
 -- Table of layouts to cover with awful.layout.inc, order matters.
 local layouts =
 {
-    awful.layout.suit.floating,
     awful.layout.suit.tile,
+    awful.layout.suit.floating,
     awful.layout.suit.fair,
     awful.layout.suit.max.fullscreen,
     awful.layout.suit.magnifier,
@@ -492,27 +493,36 @@ do
 
     else
 
-        local tag = awful.tag.add("genesis",
-        {
-            screen = 1,
-            layout = customization.default.property.layout,
-            mwfact = customization.default.property.mwfact,
-            nmaster = customization.default.property.nmaster,
-            ncol = customization.default.property.ncol, 
-        } 
-        )
-        awful.tag.viewonly(tag)
+      -- {{{ Tags
+      -- Define a tag table which hold all screen tags.
+      tags = {}
+      for s = 1, screen.count() do
+        -- Each screen has its own tag table.
+        tags[s] = awful.tag({ "➊", "➋", "➌", "➍", "❺"}, s, layouts[1])
+      end
+      -- }}}
 
-        awful.tag.add("nil",
-        {
-            screen = 2,
-            layout = customization.default.property.layout,
-            mwfact = customization.default.property.mwfact,
-            nmaster = customization.default.property.nmaster,
-            ncol = customization.default.property.ncol, 
-        } 
-        ) 
-
+        -- local tag = awful.tag.add("genesis",
+        -- {
+        --     screen = 1,
+        --     layout = customization.default.property.layout,
+        --     mwfact = customization.default.property.mwfact,
+        --     nmaster = customization.default.property.nmaster,
+        --     ncol = customization.default.property.ncol, 
+        -- } 
+        -- )
+        -- awful.tag.viewonly(tag)
+        --
+        -- awful.tag.add("nil",
+        -- {
+        --     screen = 2,
+        --     layout = customization.default.property.layout,
+        --     mwfact = customization.default.property.mwfact,
+        --     nmaster = customization.default.property.nmaster,
+        --     ncol = customization.default.property.ncol, 
+        -- } 
+        -- ) 
+        --
     end
 end
 
@@ -813,8 +823,13 @@ end),
 -- app bindings
 
 --- admin
+--
+awful.key({ modkey }, "l", function ()
+    awful.util.spawn("slock")
+end),
 
-awful.key({ modkey, }, "`", function ()
+
+awful.key({ modkey }, "`", function ()
     awful.util.spawn("xscreensaver-command -l")
 end),
 

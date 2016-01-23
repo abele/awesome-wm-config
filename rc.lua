@@ -229,7 +229,7 @@ end
 
 --{{
 local tools = {
-    terminal = "sakura",
+    terminal = "sakura -x xonsh",
     system = {
         filemanager = "pcmanfm",
     },
@@ -637,8 +637,7 @@ awful.key({ modkey }, "c", function ()
     awful.util.spawn(tools.editor.primary .. " " .. awful.util.getdir("config") .. "/rc.lua" )
 end),
 
-awful.key({modkey,}, "/", function() mymainmenu:toggle({keygrabber=true}) end),
-
+awful.key({modkey,}, "/", function() awful.util.spawn("slock") end),
 awful.key({ modkey,           }, "Return", function () awful.util.spawn(tools.terminal) end),
 
 awful.key({ modkey, "Mod1" }, "Return", function () awful.util.spawn("gksudo " .. tools.terminal) end),
@@ -824,10 +823,15 @@ end),
 
 --- admin
 --
-awful.key({ modkey }, "l", function ()
-    awful.util.spawn("slock")
-end),
+-- awful.key({ modkey }, "l", function ()
+--     awful.util.spawn("slock")
+-- end),
+--
+--
 
+awful.key({modkey, "Shift"}, "z", function ()
+    awful.util.spawn("zeal") 
+end),
 
 awful.key({ modkey }, "`", function ()
     awful.util.spawn("xscreensaver-command -l")
@@ -861,7 +865,7 @@ end),
 
 awful.key({ modkey, }, "b", function ()
     awful.util.spawn(tools.browser.primary)
-    --awful.util.spawn('google-chrome-stable')
+    --awful.util.spawn('c')
 end),
 
 awful.key({ modkey, "Shift" }, "b", function ()
@@ -1104,19 +1108,6 @@ for i = 1, 10 do
         local tags = awful.tag.gettags(mouse.screen)
         if i <= #tags then
             tag = tags[i]
-        else
-            local scr = mouse.screen
-            awful.prompt.run({prompt = "<span fgcolor='red'>new tag: </span>"},
-            mypromptbox[scr].widget,
-            function (text)
-                if #text>0 then
-                    tag = awful.tag.add(text)
-                    awful.tag.setscreen(tag, scr)
-                    awful.tag.move(#tags+1, tag)
-                    awful.tag.viewonly(tag)
-                end
-            end,
-            nil)
         end
         if tag then
             awful.tag.viewonly(tag)

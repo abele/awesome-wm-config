@@ -229,7 +229,7 @@ end
 
 --{{
 local tools = {
-    terminal = "sakura -x xonsh",
+    terminal = "konsole",
     system = {
         filemanager = "pcmanfm",
     },
